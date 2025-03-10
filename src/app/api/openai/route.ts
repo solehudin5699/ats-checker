@@ -17,7 +17,8 @@ export async function POST(request: Request) {
     const fileType = file.type || file.name.split('.').pop()?.toLowerCase();
 
     const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    // const buffer = Buffer.from(arrayBuffer);
+    const buffer = Buffer.from(new Uint8Array(arrayBuffer));
 
     if (fileType === 'application/pdf' || fileType === 'pdf') {
       // Parsing PDF
