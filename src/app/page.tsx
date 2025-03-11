@@ -59,6 +59,8 @@ export default function Home() {
       throw new Error('Tidak ada respons dari server.');
     }
 
+    setIsOpen(true);
+
     const reader = response.body.getReader();
     const decoder = new TextDecoder('utf-8');
     let result = '';
@@ -72,9 +74,6 @@ export default function Home() {
       result += chunk;
 
       setState({ ...state, data: { data: result } });
-      if (!isOpen) {
-        setIsOpen(true);
-      }
       if (isFirstChunk && result.includes('⏳ Memulai analisis...')) {
         // Hapus pesan loading dari result
         result = result.replace('⏳ Memulai analisis...\n\n', '');
