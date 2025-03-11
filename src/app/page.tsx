@@ -18,14 +18,33 @@ export default function Home() {
     } else if (!formData.get('jobDescription')) {
       return alert('Please enter the job description');
     }
+
+    let resumeText = formData.get('resumeText');
     try {
       setState({
         data: {},
         loading: true,
       });
+      // parse file if exists
+      if (!!formData.get('file')) {
+        const parseResponse = await fetch('/api/parse-file', {
+          method: 'POST',
+          body: formData,
+        });
+        const parseData = await parseResponse.json();
+        if (!parseData.resumeText) {
+          throw new Error('Error parsing file');
+        }
+        resumeText = parseData.resumeText;
+      }
+
       const response = await fetch('/api/openai', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          resumeText,
+          jobDescription: formData.get('jobDescription'),
+        }),
       });
       const data = await response.json();
       setState({
