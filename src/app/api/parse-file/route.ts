@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     }
 
     return new Response(JSON.stringify({ resumeText }), { status: 200 });
-  } catch (error) {
+  } catch (_error) {
     return new Response(JSON.stringify({ error: 'Error processing file' }), { status: 500 });
   }
 }

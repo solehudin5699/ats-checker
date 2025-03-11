@@ -35,7 +35,7 @@ export async function POST(request: Request) {
       }),
       { status: 200 }
     );
-  } catch (error) {
+  } catch (_error) {
     return new Response(JSON.stringify({ error: 'Error processing request' }), { status: 500 });
   }
 }
