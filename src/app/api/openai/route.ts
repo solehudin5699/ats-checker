@@ -23,18 +23,36 @@ export async function POST(request: Request) {
       Berikan skor kecocokan dari 0-100 (dalam persentase misal 90%) dan berikan saran perbaikan.
     `;
 
-    const response = await client.chat.completions.create({
-      model: 'deepseek-chat',
-      messages: [{ role: 'system', content: prompt }],
+    const encoder = new TextEncoder();
+    const readableStream = new ReadableStream({
+      async start(controller) {
+        controller.enqueue(encoder.encode('⏳ Memulai analisis...\n\n'));
+
+        try {
+          const response = await client.chat.completions.create({
+            model: 'deepseek-chat',
+            messages: [{ role: 'system', content: prompt }],
+            stream: true,
+          });
+
+          for await (const chunk of response) {
+            const textChunk = chunk.choices?.[0]?.delta?.content;
+            if (textChunk) {
+              controller.enqueue(encoder.encode(textChunk));
+            }
+          }
+
+          controller.close();
+        } catch (_error) {
+          controller.enqueue(encoder.encode('❌ Terjadi kesalahan saat memproses permintaan.'));
+          controller.close();
+        }
+      },
     });
 
-    return new Response(
-      JSON.stringify({
-        status: 'success',
-        data: response.choices?.[0]?.message?.content,
-      }),
-      { status: 200 }
-    );
+    return new Response(readableStream, {
+      headers: { 'Content-Type': 'text/plain' },
+    });
   } catch (_error) {
     return new Response(JSON.stringify({ error: 'Error processing request' }), { status: 500 });
   }

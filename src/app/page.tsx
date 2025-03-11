@@ -37,21 +37,8 @@ export default function Home() {
         }
         resumeText = parseData.resumeText;
       }
-
-      const response = await fetch('/api/openai', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          resumeText,
-          jobDescription: formData.get('jobDescription'),
-        }),
-      });
-      const data = await response.json();
-      setState({
-        data,
-        loading: false,
-      });
-      setIsOpen(true);
+      // start streaming analys
+      await analyzeResume(resumeText as string, formData.get('jobDescription') as string);
     } catch (_error) {
       setState({
         data: {},
@@ -60,6 +47,43 @@ export default function Home() {
       alert('Error analyzing resume');
     }
   };
+
+  async function analyzeResume(resumeText: string, jobDescription: string) {
+    const response = await fetch('/api/openai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ resumeText, jobDescription }),
+    });
+
+    if (!response.body) {
+      throw new Error('Tidak ada respons dari server.');
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    let result = '';
+    let isFirstChunk = true; // Menandakan apakah chunk pertama sudah diterima
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value, { stream: true });
+      result += chunk;
+
+      setState({ ...state, data: { data: result } });
+      if (!isOpen) {
+        setIsOpen(true);
+      }
+      if (isFirstChunk && result.includes('⏳ Memulai analisis...')) {
+        // Hapus pesan loading dari result
+        result = result.replace('⏳ Memulai analisis...\n\n', '');
+        isFirstChunk = false; // Supaya hanya dijalankan sekali
+      }
+    }
+
+    return result;
+  }
   return (
     <>
       <div className="min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)] container-app w-full fixed top-0 left-0 right-0 bottom-0 overflow-y-auto grid place-content-center">
