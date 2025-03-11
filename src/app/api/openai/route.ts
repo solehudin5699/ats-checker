@@ -1,11 +1,24 @@
 import OpenAI from 'openai';
 import PdfParse from 'pdf-parse';
 import mammoth from 'mammoth';
+import { Readable } from 'stream';
 
 const client = new OpenAI({
   baseURL: process.env.OPENAI_BASE_URL,
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+async function fileToBuffer(file: File): Promise<Buffer> {
+  const stream = file.stream();
+  const chunks: Buffer[] = [];
+  const readable = Readable.from(stream as any);
+
+  for await (const chunk of readable) {
+    chunks.push(Buffer.from(chunk));
+  }
+
+  return Buffer.concat(chunks);
+}
 
 export async function POST(request: Request) {
   const formData = await request.formData();
@@ -16,9 +29,10 @@ export async function POST(request: Request) {
   if (file) {
     const fileType = file.type || file.name.split('.').pop()?.toLowerCase();
 
-    const arrayBuffer = await file.arrayBuffer();
+    const buffer = await fileToBuffer(file);
+    // const arrayBuffer = await file.arrayBuffer();
     // const buffer = Buffer.from(arrayBuffer);
-    const buffer = Buffer.from(new Uint8Array(arrayBuffer));
+    // const buffer = Buffer.from(new Uint8Array(arrayBuffer));
 
     if (fileType === 'application/pdf' || fileType === 'pdf') {
       // Parsing PDF
