@@ -15,6 +15,18 @@ export default function Variants({ isOpen, setIsOpen, result }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { height } = useDimensions(containerRef);
 
+  const handleDownload = () => {
+    const blob = new Blob([result], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ats-result.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="relative">
       <div
@@ -39,7 +51,7 @@ export default function Variants({ isOpen, setIsOpen, result }: Props) {
               'bg-white/90 rounded-2xl overflow-y-auto w-[500px] delay-300',
               isOpen
                 ? 'w-[calc(100vw-80px)] transition-all z-10 absolute top-10 left-10 right-10 bottom-10 min-h-[350px]'
-                : 'w-0 lg:w-[0] h-0'
+                : 'w-0 lg:w-[0] h-0',
             )}
           >
             <div className="p-10">
@@ -47,6 +59,21 @@ export default function Variants({ isOpen, setIsOpen, result }: Props) {
             </div>
           </div>
           <MenuToggle toggle={() => setIsOpen(!isOpen)} />
+          <button
+            className="absolute top-[18px] right-[60px] w-12 h-12 rounded-full bg-gray-200 hover:bg-blue-500 text-gray-700 hover:text-white flex items-center justify-center transition-all duration-200 cursor-pointer border-none outline-none z-[11]"
+            onClick={handleDownload}
+            title="Download Result"
+          >
+            <svg
+              fill="currentColor"
+              height="20"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M12 16l-5-5 1.41-1.41L11 12.17V4h2v8.17l2.59-2.58L17 11l-5 5zm-7 2h14v2H5v-2z" />
+            </svg>
+          </button>
         </motion.nav>
       </div>
     </div>
