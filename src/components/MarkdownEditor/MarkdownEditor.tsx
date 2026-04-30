@@ -6,6 +6,7 @@ import { cn } from '@/utils/className';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import useMergedRefs from '@/hooks/useMergeRefs';
 import debounce from '@/utils/debounce';
+import { sanitizeMarkdown } from '@/utils/sanitizeMarkdown';
 
 interface MarkdownEditorProps extends Partial<Omit<MDXEditorProps, 'plugins'>> {
   onChange?: (markdown: string) => void;
@@ -41,7 +42,7 @@ const MarkdownEditor = React.forwardRef<MDXEditorMethods, MarkdownEditorProps>(f
 
   const setValues = useCallback(
     debounce((value: string) => {
-      internalRef?.current?.setMarkdown?.(value);
+      internalRef?.current?.setMarkdown?.(sanitizeMarkdown(value));
     }, 30),
     []
   );
@@ -49,6 +50,8 @@ const MarkdownEditor = React.forwardRef<MDXEditorMethods, MarkdownEditorProps>(f
   useEffect(() => {
     setValues(value || '');
   }, [value]);
+
+  const sanitizedValue = useMemo(() => sanitizeMarkdown(value || ''), [value]);
 
   return (
     <MDXEditor
@@ -58,11 +61,12 @@ const MarkdownEditor = React.forwardRef<MDXEditorMethods, MarkdownEditorProps>(f
         rest.contentEditableClassName,
         value ? '' : '!text-[#9AA4B2] !font-normal !text-sm'
       )}
-      markdown={value || ''}
+      markdown={sanitizedValue}
       onChange={onChange}
       plugins={pluginSelected}
       readOnly={readOnly}
       ref={mergedRefs}
+      suppressHtmlProcessing
     />
   );
 });

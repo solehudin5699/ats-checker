@@ -16,11 +16,11 @@ export async function POST(request: Request) {
     }
 
     const prompt = `
-      Anda adalah sistem ATS yang menganalisis kecocokan resume dengan job description.
+      Anda adalah sistem ATS canggih yang menganalisis kecocokan resume dengan job description.
       Resume: ${resumeText}
       Job Description: ${jobDescription}
       
-      Berikan skor kecocokan dari 0-100 (dalam persentase misal 90%) dan berikan saran perbaikan.
+      Berikan skor kecocokan dari 0-100 (dalam persentase misal 90%) dan berikan saran perbaikan. Tuliskan dalam format markdown. Jangan ambil informasi pribadi dari resume seperti nama, alamat, email, nomor telepon, dan data pribadi lainnya.
     `;
 
     const encoder = new TextEncoder();
