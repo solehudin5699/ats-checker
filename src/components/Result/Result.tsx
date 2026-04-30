@@ -13,7 +13,14 @@ interface Props {
 }
 export default function Variants({ isOpen, setIsOpen, result }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const { height } = useDimensions(containerRef);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [result]);
 
   const handleDownload = () => {
     const blob = new Blob([result], { type: 'text/plain' });
@@ -47,6 +54,7 @@ export default function Variants({ isOpen, setIsOpen, result }: Props) {
         >
           <motion.div style={background} variants={sidebarVariants} />
           <div
+            ref={scrollRef}
             className={cn(
               'bg-white/90 dark:bg-zinc-900/92 rounded-2xl overflow-y-auto w-[500px] delay-300',
               isOpen
