@@ -2,6 +2,7 @@
 import { FormEvent, useState } from 'react';
 import ResumeOrCv from '@/components/ResumeOrCv';
 import Result from '@/components/Result';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
@@ -86,17 +87,21 @@ export default function Home() {
   return (
     <>
       <div className="min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)] container-app w-full fixed top-0 left-0 right-0 bottom-0 overflow-y-auto grid place-content-center">
-        <form className="p-5 bg-white/90 rounded-2xl w-full lg:w-[750px]" onSubmit={handleAnalyze}>
-          <h2 className="text-lg font-bold mb-10">ATS Checker</h2>
+        <ThemeToggle />
+        <form
+          className="p-5 bg-white/90 dark:bg-zinc-900/92 rounded-2xl w-full lg:w-[750px]"
+          onSubmit={handleAnalyze}
+        >
+          <h2 className="text-lg font-bold mb-10 text-zinc-900 dark:text-zinc-100">ATS Checker</h2>
           <ResumeOrCv />
-          <h6 className="font-semibold mt-5">Job Description</h6>
+          <h6 className="font-semibold mt-5 text-zinc-800 dark:text-zinc-200">Job Description</h6>
           <textarea
-            className="w-full p-2 mt-2  border border-blue-300 h-32 rounded-2xl bg-white"
+            className="w-full p-2 mt-2 border border-blue-300 dark:border-blue-800 h-32 rounded-2xl bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
             placeholder="Paste Job Description Here..."
             name="jobDescription"
           />
           <button
-            className="mt-2 p-2 bg-blue-500 text-white w-full rounded-2xl cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-2 p-2 bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 text-white w-full rounded-2xl cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             disabled={state.loading}
             type="submit"
           >
@@ -105,7 +110,7 @@ export default function Home() {
           {state?.data?.data && (
             <button
               type="button"
-              className="cursor-pointer text-blue-600 mt-10 underline"
+              className="cursor-pointer text-blue-600 dark:text-blue-400 mt-10 underline"
               onClick={() => setIsOpen(true)}
             >
               View Result

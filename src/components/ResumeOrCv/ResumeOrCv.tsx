@@ -18,7 +18,7 @@ const AllTabs = [
     key: 'paste-resume',
     component: (
       <textarea
-        className="w-full p-2 border border-blue-300 h-32 rounded-2xl bg-white"
+        className="w-full p-2 border border-blue-300 dark:border-blue-800 h-32 rounded-2xl bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
         placeholder="Paste Resume Here..."
         name="resumeText"
       />
@@ -30,7 +30,7 @@ export default function ResumeOrCv() {
 
   return (
     <div style={container}>
-      <h6 className="font-semibold">
+      <h6 className="font-semibold text-zinc-800 dark:text-zinc-200">
         Upload CV <span className="font-normal">or</span> Paste Your Resume
       </h6>
       <nav style={nav}>
@@ -40,7 +40,8 @@ export default function ResumeOrCv() {
               key={item.label}
               initial={false}
               animate={{
-                backgroundColor: item.key === selectedTab.key ? '#eee' : '#eee0',
+                backgroundColor:
+                  item.key === selectedTab.key ? 'var(--tab-active-bg)' : 'transparent',
               }}
               style={tab}
               onClick={() => setSelectedTab(item)}
@@ -83,12 +84,12 @@ const container: React.CSSProperties = {
 };
 
 const nav: React.CSSProperties = {
-  background: '#fdfdfd',
+  background: 'var(--nav-bg)',
   padding: '5px 5px 0',
   borderRadius: '10px',
   borderBottomLeftRadius: 0,
   borderBottomRightRadius: 0,
-  borderBottom: '1px solid #eeeeee',
+  borderBottom: '1px solid var(--border-subtle)',
   height: 44,
 };
 
@@ -114,7 +115,7 @@ const tab: React.CSSProperties = {
   width: '100%',
   padding: '10px 15px',
   position: 'relative',
-  background: 'white',
+  background: 'var(--tab-bg)',
   cursor: 'pointer',
   height: 36,
   display: 'flex',
@@ -123,7 +124,7 @@ const tab: React.CSSProperties = {
   flex: 1,
   minWidth: 0,
   userSelect: 'none',
-  color: '#0f1115',
+  color: 'var(--tab-text)',
 };
 
 const underline: React.CSSProperties = {
@@ -132,14 +133,13 @@ const underline: React.CSSProperties = {
   left: 0,
   right: 0,
   height: 2,
-  background: '#000',
+  background: 'var(--underline-color)',
 };
 
 const iconContainer: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  // flex: 1,
   padding: '10px 0px',
 };
 

@@ -48,7 +48,7 @@ export default function Variants({ isOpen, setIsOpen, result }: Props) {
           <motion.div style={background} variants={sidebarVariants} />
           <div
             className={cn(
-              'bg-white/90 rounded-2xl overflow-y-auto w-[500px] delay-300',
+              'bg-white/90 dark:bg-zinc-900/92 rounded-2xl overflow-y-auto w-[500px] delay-300',
               isOpen
                 ? 'w-[calc(100vw-80px)] transition-all z-10 absolute top-10 left-10 right-10 bottom-10 min-h-[350px]'
                 : 'w-0 lg:w-[0] h-0',
@@ -60,7 +60,7 @@ export default function Variants({ isOpen, setIsOpen, result }: Props) {
           </div>
           <MenuToggle toggle={() => setIsOpen(!isOpen)} />
           <button
-            className="absolute top-[18px] right-[60px] w-12 h-12 rounded-full bg-gray-200 hover:bg-blue-500 text-gray-700 hover:text-white flex items-center justify-center transition-all duration-200 cursor-pointer border-none outline-none z-[11]"
+            className="absolute top-[18px] right-[60px] w-12 h-12 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-blue-500 dark:hover:bg-blue-600 text-gray-700 dark:text-zinc-200 hover:text-white flex items-center justify-center transition-all duration-200 cursor-pointer border-none outline-none z-[11]"
             onClick={handleDownload}
             title="Download Result"
           >
@@ -82,7 +82,6 @@ export default function Variants({ isOpen, setIsOpen, result }: Props) {
 
 const sidebarVariants = {
   open: (height = 1000) => ({
-    // clipPath: `circle(${height * 2 + 200}px at 40px 40px)`,
     clipPath: `circle(${height * 2 + 200}px at 50% 50%)`,
     transition: {
       type: 'spring',
@@ -91,7 +90,6 @@ const sidebarVariants = {
     },
   }),
   closed: {
-    // clipPath: 'circle(30px at 40px 40px)',
     clipPath: 'circle(0px at 50% 50%)',
     transition: {
       delay: 0.2,
@@ -135,7 +133,7 @@ const nav: React.CSSProperties = {
 };
 
 const background: React.CSSProperties = {
-  backgroundColor: '#f5f5f5',
+  backgroundColor: 'var(--result-overlay-bg)',
   position: 'absolute',
   top: 0,
   left: 0,
