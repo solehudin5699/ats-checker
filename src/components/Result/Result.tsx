@@ -22,16 +22,9 @@ export default function Variants({ isOpen, setIsOpen, result }: Props) {
     }
   }, [result]);
 
-  const handleDownload = () => {
-    const blob = new Blob([result], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'ats-result.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const handleDownload = async () => {
+    const { generatePDF } = await import('@/utils/generatePDF');
+    await generatePDF({ content: result });
   };
 
   return (

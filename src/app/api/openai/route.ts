@@ -21,6 +21,11 @@ export async function POST(request: Request) {
       Job Description: ${jobDescription}
       
       Berikan skor kecocokan dari 0-100 (dalam persentase misal 90%) dan berikan saran perbaikan. Tuliskan dalam format markdown. Jangan ambil informasi pribadi dari resume seperti nama, alamat, email, nomor telepon, dan data pribadi lainnya.
+      
+      PENTING: 
+      - Jangan gunakan code block (triple backtick) untuk contoh teks. Gunakan inline code (single backtick) atau format quote (>).
+      - Jangan gunakan karakter "<" atau ">" dalam teks biasa, gunakan "kurang dari" atau "lebih dari".
+      - Gunakan bullet points (- atau *) untuk list, bukan angka.
     `;
 
     const encoder = new TextEncoder();
